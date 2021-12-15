@@ -4,10 +4,13 @@ const expressAsyncHandler = require('express-async-handler');
 const Video = require('../models/Video');
 
 queryRouter.get(
-    '/all_videos',
+    '/all_videos/:skip/:limit',
     expressAsyncHandler(async (req,res)=>{
         try{
-            const allVideos = await Video.find({}).sort({publishedAt: -1});
+            const allVideos = await Video.find({}).sort({publishedAt: -1})
+            .skip(parseInt(req.params.skip))
+            .limit(parseInt(req.params.limit));
+            console.log(allVideos.length)
             res.status(200).send({
                 message: "Success",
                 videos: allVideos
@@ -19,6 +22,6 @@ queryRouter.get(
             })
         }
     })
-)
+);
 
 module.exports = queryRouter;
